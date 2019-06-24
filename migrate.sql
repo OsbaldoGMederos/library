@@ -1,0 +1,7 @@
+create table `users` (`id` int unsigned not null auto_increment primary key, `name` varchar(191) not null, `email` varchar(191) not null, `password` varchar(191) not null, `remember_token` varchar(100) null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate utf8mb4_unicode_ci;
+alter table `users` add unique `users_email_unique`(`email`);
+create table `password_resets` (`email` varchar(191) not null, `token` varchar(191) not null, `created_at` timestamp null) default character set utf8mb4 collate utf8mb4_unicode_ci;
+alter table `password_resets` add index `password_resets_email_index`(`email`);
+create table `categories` (`id` int unsigned not null auto_increment primary key, `name` varchar(191) not null, `description` mediumtext not null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate utf8mb4_unicode_ci;
+create table `books` (`id` int unsigned not null auto_increment primary key, `name` varchar(191) not null, `author` varchar(191) not null, `category_id` int unsigned not null, `published_date` date not null, `user` varchar(191) not null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate utf8mb4_unicode_ci;
+alter table `books` add constraint `books_category_id_foreign` foreign key (`category_id`) references `categories` (`id`) on delete cascade;
