@@ -57,7 +57,39 @@ So install [Nodejs](https://nodejs.org/es/) (default installation includes npm).
 * Create a new database called **library**.
 * Edit the **.env** file to match your Database configuration such a`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD`.
 * Run **php artisan migrate**
+* Edit the `/etc/apache2/apache2.conf` file.
+Add a Directory field like:
+```html
+<Directory /path/to/the/repository>
+	Options Indexes FollowSymLinks
+	AllowOverride All
+	Require all granted
+</Directory>
+```
+* Create a config file to the `/etc/apache2/sites-available/` directory.
+Call it **library.conf** and add your configuration like:
+```html
+<VirtualHost *:80>.
+    ServerName library.dev
+    ServerAdmin webmaster@localhost
+    # Your Custom folder 
+    DocumentRoot /path/to/the/repository/public
+    <Directory /path/to/the/repository/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log common
+</VirtualHost>
+```
+* Change your apache2 site with **sudo a2dissite 000-default.conf**
+* Enable the new configuration with **sudo a2ensite library.conf**
+* Reload your service with **sudo service apache reload** or an equivalent for your distro.
+* Now you can go to your browser on http://localhost or you can run **php artisan serve** on the repository directory to serve the web app on localhost:8000
 
 ### Notes
 * Sometimes Chrome forces https connection. If so, your not going to be able to open the app, so try to use a different browser insted (like firefox). Or [create a Self Certificate and enable SSL](https://stackoverflow.com/questions/42951159/why-the-connection-appear-to-be-not-secure-on-my-php-webapp-depolyed-on-my-loc)
 * You can run **php artisan serve** as well to see the web app on `http://localhost:8000`.
+* There is a file called **migrate.sql** with the queries to create the database if you prefer instead of using migration.
+* There is a file called **populateDB.sql** with queries to add categories and books to start with.

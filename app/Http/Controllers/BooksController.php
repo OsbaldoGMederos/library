@@ -77,8 +77,13 @@ class BooksController extends Controller
     public function show($id)
     {
         $book = Book::find($id);
-        $category = Category::find($book->category_id);
-        return view('books.show')->with(['book' => $book, 'category' => $category]);
+        if($book) {
+            $category = Category::find($book->category_id);
+            return view('books.show')->with(['book' => $book, 'category' => $category]);
+        }
+        else {
+            abort(404);
+        }
     }
 
     /**
@@ -90,9 +95,14 @@ class BooksController extends Controller
     public function edit($id)
     {
         $book = Book::find($id);
-        $category = Category::find($book->category_id);
-        $categories = Category::orderBy('name')->get();
-        return view('books.edit')->with(['book' => $book, 'category' => $category, 'categories' => $categories]);
+        if($book) {
+            $category = Category::find($book->category_id);
+            $categories = Category::orderBy('name')->get();
+            return view('books.edit')->with(['book' => $book, 'category' => $category, 'categories' => $categories]);
+        }
+        else {
+            abort(404);
+        }
     }
 
     /**

@@ -62,8 +62,18 @@ class CategoriesController extends Controller
     {
 
         $books = Book::where('category_id', $id)->get();
-        $category = Category::find($id);
-        return view('categories/show')->with(['books' => $books, 'category' => $category]);
+        if($books) {
+            $category = Category::find($id);
+            if($category) {
+                return view('categories/show')->with(['books' => $books, 'category' => $category]);
+            }
+            else {
+                abort(404);
+            }
+        }
+        else {
+            abort(404);
+        }
     }
 
     /**
@@ -75,7 +85,12 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
-        return view('categories.edit')->with('category', $category);
+        if($category) {
+            return view('categories.edit')->with('category', $category);
+        }
+        else {
+            abort(404);
+        }
     }
 
     /**
